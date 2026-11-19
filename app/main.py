@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import Depends, FastAPI, status
 from psycopg import Connection
@@ -7,11 +8,14 @@ from app.db import get_conn, pool
 from app.schemas import TestResult, TestResultCreate
 
 COLUMNS = "id, name, status, date, duration"
+SCHEMA_SQL = (Path(__file__).parent / "schema.sql").read_text()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    pool.open()
+    pool.open(wait=True)
+    with pool.connection() as conn:
+        conn.execute(SCHEMA_SQL)
     try:
         yield
     finally:
