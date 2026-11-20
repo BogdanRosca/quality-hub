@@ -29,10 +29,10 @@ Interactive docs: http://localhost:8000/docs
 ```bash
 curl -X POST localhost:8000/results \
   -H 'Content-Type: application/json' \
-  -d '{"name": "login works", "status": "pass", "duration": 1.234}'
+  -d '{"test_id": "057c387a-a78a-4007-8888-6db23da22c5a", "test_module": "tests/test_auth.py", "test_name": "test_login", "test_path": "tests/test_auth.py::test_login", "status": "passed", "duration": 1.234}'
 
 curl localhost:8000/results
 ```
 
-`status` must be one of `pass`, `failed`, `skipped`. `duration` is in seconds (>= 0).
+`status` must be one of `passed`, `failed`, `skipped`. `duration` is in seconds (>= 0).
 `date` is optional and defaults to the current time.

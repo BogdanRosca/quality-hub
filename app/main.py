@@ -7,7 +7,7 @@ from psycopg import Connection
 from app.db import get_conn, pool
 from app.schemas import TestResult, TestResultCreate
 
-COLUMNS = "id, name, status, date, duration"
+COLUMNS = "id, test_id, test_path, test_module, test_name, status, date, duration"
 SCHEMA_SQL = (Path(__file__).parent / "schema.sql").read_text()
 
 
@@ -29,8 +29,8 @@ app = FastAPI(title="Quality Hub", lifespan=lifespan)
 def create_result(payload: TestResultCreate, conn: Connection = Depends(get_conn)):
     return conn.execute(
         f"""
-        INSERT INTO test_results (name, status, date, duration)
-        VALUES (%(name)s, %(status)s, COALESCE(%(date)s::timestamptz, now()), %(duration)s)
+        INSERT INTO test_results (test_id, test_path, test_module, test_name, status, date, duration)
+        VALUES (%(test_id)s, %(test_path)s, %(test_module)s, %(test_name)s, %(status)s, COALESCE(%(date)s::timestamptz, now()), %(duration)s)
         RETURNING {COLUMNS}
         """,
         payload.model_dump(),
